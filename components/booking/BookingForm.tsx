@@ -165,8 +165,9 @@ export default function BookingForm({bookingDetails, setBookingDetails}: {bookin
 
   // ✅ 3. Update nextStep function
   const nextStep = () => {
+   console.log("currentStep",currentStep);
     let isValid = true;
-
+            
     if (currentStep === 1) isValid = validateStep1();
     if (currentStep === 2) isValid = validateStep2(); 
     if (currentStep === 3) isValid = validateStep3(); 

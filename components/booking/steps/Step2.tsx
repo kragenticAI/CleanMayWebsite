@@ -19,6 +19,7 @@ interface Step2Props {
 
 // ✅ 3. Destructure new props: errors and setErrors
 export default function Step2({ bookingDetails, setBookingDetails, errors, setErrors }: Step2Props) {
+  console.log("in step 2");
 
   // ✅ 4. Update handleChange to clear errors on input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
