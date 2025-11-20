@@ -26,20 +26,41 @@ const AddOnItem : React.FC<AddOnItemProps> = ({ service, price }) => (
 
 // --- Main Pricing Page Component ---
 export default function PricingPage() {
-  // Data for the pricing cards
- 
 
-  // Data for add-ons
- 
+  // 1. Define the JSON-LD Schema
+  // This schema dynamically creates an "Offer" for each of your pricing plans.
+  const pricingSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product', // This represents your "Cleaning Service" product
+    'name': 'Pro Housekeepers Cleaning Service',
+    'description': 'View starting rates for all our cleaning plans. Prices based on home size. Weekly, bi-weekly, and monthly discounts available.',
+    'brand': {
+      '@type': 'Organization',
+      'name': 'Clean May' // Or your company name
+    },
+    // Dynamically create an offer for each plan
+    'offers': pricingPlans.map(plan => ({
+      '@type': 'Offer',
+      'name': `${plan.plan} (${plan.description})`, // e.g., "La Petite (1-2 Bed / 1 Bath)"
+      'price': plan.price.replace('$', ''), // Removes the "$" to leave just the number
+      'priceCurrency': 'USD',
+      // !! UPDATE THIS URL to the correct final URL
+      'url': 'https://www.yourwebsite.com/pricingPage' // The URL of this page
+    }))
+  };
 
   return (
-    <div className="bg-gray-50 font-sans py-16 md:py-24">
+    <div className="bg-[#f4f4f4] font-sans py-16 md:py-24">
+      
+      {/* 2. Add the schema script here. It's server-rendered! */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pricingSchema) }}
+      />
+
       <div className="container mx-auto px-6">
         {/* --- Header --- */}
         <div className="text-center mb-16">
-          {/* <p className="text-sm font-semibold text-indigo-600 uppercase tracking-wider mb-2">
-            Main page / Pricing
-          </p> */}
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900">
             Starting Rates by Home Size
           </h1>

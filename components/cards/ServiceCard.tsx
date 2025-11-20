@@ -3,6 +3,8 @@
 import Image from 'next/image';
 import { ReactNode } from 'react';
 import PrimaryButton from '../buttons/PrimaryButton';
+import Link from 'next/link';
+
 
 interface ServiceCardProps {
     title: string;
@@ -14,6 +16,7 @@ interface ServiceCardProps {
     ctaText?: string;
     onLearnMore?: () => void;
     className?: string;
+    link?: string; 
 }
 
 export default function ServiceCard({
@@ -23,6 +26,7 @@ export default function ServiceCard({
     ctaText = "LEARN MORE",
     onLearnMore,
     className = "",
+    link=""
 }: ServiceCardProps) {
 
     return (
@@ -60,9 +64,12 @@ export default function ServiceCard({
 
             {/* CTA */}
             <div className="text-center">
-                <PrimaryButton onClick={onLearnMore} className="py-3 px-11  text-white hover:underline ">
+                <Link href={link}>
+                <PrimaryButton  className="py-3 px-11  text-white hover:underline ">
                     {ctaText}
                 </PrimaryButton>
+                </Link>
+              
             </div>
         </div>
     );

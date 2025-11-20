@@ -1,88 +1,130 @@
 'use client';
 
-import React, { useState } from 'react'; // Added React
-// import Image from 'next/image'; // Replaced with <img> for preview compatibility
-// import Link from 'next/link'; // Replaced with <a> for preview compatibility
-// import PrimaryButton from '../buttons/PrimaryButton'; // Replaced with <button> for preview
-import { ChevronDown, Menu, X } from 'lucide-react'; // Added icons
+import React, { useState } from 'react';
+import { locationsMenu } from '@/Data/locationsData';
+import Link from 'next/link';
+import { ChevronDown, Menu, X } from 'lucide-react';
 import PrimaryButton from '../buttons/PrimaryButton';
+import Image from 'next/image';
 
-// Re-usable Link component for the dropdown, using <a>
-const DropdownLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
-  <a
+// --- TypeScript Types ---
+
+// Type for a single link item
+interface MenuItem {
+  name: string;
+  href: string;
+}
+
+// Type for the Services menu structure
+interface ServicesMenu {
+  residential: MenuItem[];
+  shortTermRentals: MenuItem[];
+  commercialCleaning: MenuItem[];
+  special: MenuItem[];
+}
+
+// Type for the Locations menu structure
+
+
+// Type for DropdownLink props
+interface DropdownLinkProps {
+  href: string;
+  children: React.ReactNode;
+  onClick?: () => void;
+}
+
+// --- Components ---
+
+const DropdownLink: React.FC<DropdownLinkProps> = ({ href, children, onClick }) => (
+ 
+  <Link
     href={href}
-    className="block p-2 -mx-2 rounded-lg text-gray-700 hover:underline"
+    className="block p-3 -mx-2 rounded-lg text-gray-700 font-medium hover:underline" // Updated style
+    onClick={onClick}
   >
     {children}
-  </a>
+  </Link>
 );
 
+// --- Data ---
+
 // Data for the services mega-menu
-const servicesMenu = {
+const servicesMenu: ServicesMenu = {
   residential: [
-    { name: 'Regular Cleaning', href: '#' },
-    { name: 'Deep Cleaning', href: '#' },
-    { name: 'Moving Cleaning', href: '#' },
-    { name: 'Post-Construction Cleaning', href: '#' },
+    { name: 'Regular Cleaning', href: '/service/residential/regularcleaning' },
+    { name: 'Deep Cleaning', href: '/service/residential/deepcleaning' },
+    { name: 'Moving Cleaning', href: '/service/residential/movingcleaning' },
+    { name: 'Post-Construction Cleaning', href: '/service/residential/postconstructioncleaning' },
+    { name: 'One Time Cleaning', href: '/service/residential/onetimecleaning' },
+    { name: 'Recurring Cleaning', href: '/service/residential/recurringcleaning' },
   ],
   shortTermRentals: [
-    { name: 'Turnover Service', href: '#' },
+    { name: 'Turnover Service', href: '/service/shortTerm/turnovercleaning' },
     { name: 'Inventory Management', href: '#' },
     { name: 'Laundry Service', href: '#' },
   ],
   commercialCleaning: [
-    { name: 'Office space', href: '#' },
-    { name: 'End of tenancy cleaning', href: '#' },
-    { name: 'Educational institutions', href: '#' },
-    { name: 'Healthcare settings', href: '#' },
+    { name: 'Office space', href: '/service/commercial/officespace' },
+    { name: 'End of tenancy cleaning', href: '/service/commercial/endoftenancycleaning' },
+    { name: 'Educational institutions', href: '/service/commercial/educationalinstitutions' },
+    { name: 'Healthcare settings', href: '/service/commercial/healthcaresettings' },
   ],
-  other: [
-    { name: 'Organizing Help', href: '#' },
-    { name: 'Hoarder Cleanup', href: '#' },
-    { name: 'Disinfection', href: '#' },
-    { name: 'Yacht Cleaning', href: '#' },
+  special: [
+    { name: 'Organizing Help', href: '/service/special/organizinghelp' },
+    { name: 'Yacht Cleaning', href: '/service/special/yachtcleaning' },
   ],
 };
 
 
+
+
+// --- Main Navbar Component ---
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // --- NEW: State for mobile services dropdown ---
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
+  const [isDesktopServicesOpen, setIsDesktopServicesOpen] = useState(false);
+  const [isMobileLocationsOpen, setIsMobileLocationsOpen] = useState(false);
+  const [isDesktopLocationsOpen, setIsDesktopLocationsOpen] = useState(false);
+
+  const closeMobileMenu = () => {
+    setIsMenuOpen(false);
+    setIsMobileServicesOpen(false);
+    setIsMobileLocationsOpen(false);
+  };
 
   return (
-    // Added relative positioning for the mobile menu
     <div className=" bg-white ">
-      <nav className="flex items-center justify-between overflow-hidden   ">
+      <nav className="flex items-center justify-between ">
         {/* Logo */}
-        <a href="/" className="flex items-center space-x-2 ">
-          <img
-            src="./images/logo.webp
-            "
-            alt="Pro Housekeepers"
-            width="full"
-            // width={50}
-            // height={50}
+        <Link href="/" className="flex items-center space-x-2 ">
+          <Image
+            src="/images/websitelogo.png"
+            alt="CleaningMay"
+            width={50}
+            height={50}
             className="h-18 w-auto"
-            // Using placeholder, replace with your /logo.svg
-            // src="/logo.svg" 
           />
-          {/* <span className="text-sm font-bold leading-none">PRO<br />HOUSEKEEPERS</span> */}
-        </a>
+        </Link>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
-          <a href="/whyUs" className="text-[14px] lg:text-[18px] font-semibold hover:underline">Why us</a>
-          
+          <Link href="/whyUs" className="text-[14px] lg:text-[18px] font-semibold hover:underline">Why us</Link>
+
           {/* --- Services Mega-Menu (Desktop) --- */}
-          <div className="relative group">
+          <div
+            className="relative"
+            onMouseEnter={() => setIsDesktopServicesOpen(true)}
+            onMouseLeave={() => setIsDesktopServicesOpen(false)}
+          >
             <button className="text-[14px] lg:text-[18px] font-semibold hover:underline flex items-center ">
               <span>Services</span>
               <ChevronDown className="ml-1 h-5 w-5 " />
             </button>
 
             {/* Dropdown Panel */}
-            <div className="absolute z-20 top-full ml-[200px] mt-[20px] w-screen max-w-4xl transform opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-in-out left-1/2 -translate-x-1/2 ">
+            <div className={`absolute z-20 top-full mt-[20px] w-screen max-w-4xl transform transition-all duration-300 ease-in-out left-1 -translate-x-1  ${isDesktopServicesOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+              }`}>
               <div className="overflow-hidden rounded-lg shadow-lg  ">
                 <div className="relative grid gap-8 bg-white p-8 grid-cols-4 ">
                   {/* Residential */}
@@ -93,12 +135,14 @@ export default function Navbar() {
                     <ul className="mt-4 space-y-2">
                       {servicesMenu.residential.map((item) => (
                         <li key={item.name}>
-                          <DropdownLink href={item.href}>{item.name}</DropdownLink>
+                          <DropdownLink href={item.href} onClick={() => setIsDesktopServicesOpen(false)}>
+                            {item.name}
+                          </DropdownLink>
                         </li>
                       ))}
                     </ul>
                   </div>
-                  
+
                   {/* Short-Term Rentals */}
                   <div>
                     <h3 className="text-sm font-semibold tracking-wide text-gray-900 uppercase">
@@ -107,7 +151,9 @@ export default function Navbar() {
                     <ul className="mt-4 space-y-2">
                       {servicesMenu.shortTermRentals.map((item) => (
                         <li key={item.name}>
-                          <DropdownLink href={item.href}>{item.name}</DropdownLink>
+                          <DropdownLink href={item.href} onClick={() => setIsDesktopServicesOpen(false)}>
+                            {item.name}
+                          </DropdownLink>
                         </li>
                       ))}
                     </ul>
@@ -121,21 +167,25 @@ export default function Navbar() {
                     <ul className="mt-4 space-y-2">
                       {servicesMenu.commercialCleaning.map((item) => (
                         <li key={item.name}>
-                          <DropdownLink href={item.href}>{item.name}</DropdownLink>
+                          <DropdownLink href={item.href} onClick={() => setIsDesktopServicesOpen(false)}>
+                            {item.name}
+                          </DropdownLink>
                         </li>
                       ))}
                     </ul>
                   </div>
 
-                  {/* Other */}
+                  {/* Special */}
                   <div>
                     <h3 className="text-sm font-semibold tracking-wide text-gray-900 uppercase">
-                      Other
+                      Special
                     </h3>
                     <ul className="mt-4 space-y-2">
-                      {servicesMenu.other.map((item) => (
+                      {servicesMenu.special.map((item) => (
                         <li key={item.name}>
-                          <DropdownLink href={item.href}>{item.name}</DropdownLink>
+                          <DropdownLink href={item.href} onClick={() => setIsDesktopServicesOpen(false)}>
+                            {item.name}
+                          </DropdownLink>
                         </li>
                       ))}
                     </ul>
@@ -146,20 +196,66 @@ export default function Navbar() {
           </div>
           {/* --- End Services Mega-Menu --- */}
 
+
           <div className="relative group">
-            <a href="/pricingPage" className="text-[14px] lg:text-[18px] font-semibold hover:underline flex items-center">
+            <Link href="/pricingPage" className="text-[14px] lg:text-[18px] font-semibold hover:underline flex items-center">
               Pricing
-            </a>
+            </Link>
           </div>
-          <a href="/contactForm" className="text-[14px] lg:text-[18px] font-semibold hover:underline">Contact Us</a>
+
+          {/* <-- MODIFIED: Locations Simple Dropdown (Desktop) --> */}
+          <div
+            className="relative"
+            onMouseEnter={() => setIsDesktopLocationsOpen(true)}
+            onMouseLeave={() => setIsDesktopLocationsOpen(false)}
+          >
+            <button className="text-[14px] lg:text-[18px] font-semibold hover:underline flex items-center ">
+              <span>Locations</span>
+              <ChevronDown className="ml-1 h-5 w-5 " />
+            </button>
+
+            {/* Dropdown Panel */}
+            <div
+              className={`absolute z-20 top-full mt-[20px] w-screen max-w-xs transform transition-all duration-300 ease-in-out left-1/2 -translate-x-1/2 ${isDesktopLocationsOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+                }`}
+            >
+
+              <div className="overflow-hidden rounded-lg shadow-lg">
+                <div className="relative bg-white p-4">
+
+                  {/* This just lists the states. */}
+                  <ul className="space-y-1">
+                    {/* Because we typed locationsMenu, stateCode is a string */}
+                    {Object.keys(locationsMenu).map((stateCode) => {
+                      // and state is a LocationState
+                      console.log("statecode", stateCode);
+                      const state = locationsMenu[stateCode];
+                      console.log("state", state);
+                      return (
+                        <li key={state.stateName}>
+                          {/* This link goes to the new page, e.g., /locations/tx */}
+                          <DropdownLink
+                            href={`/locations/${stateCode.toLowerCase()}`}
+                            onClick={() => setIsDesktopLocationsOpen(false)}
+                          >
+                            {state.stateName}
+                          </DropdownLink>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* <-- MODIFIED: End Locations Menu --> */}
+
+
+          <Link href="/contactForm" className="text-[14px] lg:text-[18px] font-semibold hover:underline">Contact Us</Link>
         </div>
-        
+
         <div className='hidden md:flex justify-center items-center gap-[15px]'>
-          {/* Replaced PrimaryButton with a styled <button> to fix import error */}
           <PrimaryButton className='text-white hover:underline'> Login</PrimaryButton>
-          {/* <button className='text-white bg-blue-600 hover:bg-blue-700 font-semibold py-2 px-4 rounded-md shadow-sm'>
-            
-          </button> */}
           <div className="text-[#2937b1] font-semibold text-[14px] lg:text-[18px] cursor-pointer hover:underline">
             CALL NOW (844) 242-9464
           </div>
@@ -183,122 +279,93 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg z-20 border-t border-gray-200">
           <div className="pt-2 pb-3 space-y-1">
-            <a
+            <Link
               href="/whyUs"
               className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:underline"
+              onClick={closeMobileMenu}
             >
               Why us
-            </a>
-            
-            {/* --- MODIFIED: Changed <a> to <button> to toggle mobile services --- */}
+            </Link>
+
+            {/* Services (Mobile) */}
             <button
               onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)}
               className="flex items-center justify-between w-full pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:underline"
             >
               <span>Services</span>
-              <ChevronDown 
-                className={`h-5 w-5 transform transition-transform ${isMobileServicesOpen ? 'rotate-180' : 'rotate-0'}`} 
+              <ChevronDown
+                className={`h-5 w-5 transform transition-transform ${isMobileServicesOpen ? 'rotate-180' : 'rotate-0'}`}
               />
             </button>
-
-            {/* --- NEW: Conditionally rendered mobile services menu --- */}
             {isMobileServicesOpen && (
               <div className="pl-8 pr-4 pb-2 space-y-3 bg-gray-50">
-                {/* Residential */}
-                <div>
-                  <h4 className="text-sm font-semibold tracking-wide text-gray-900 uppercase pt-3">
-                    Residential
-                  </h4>
-                  <ul className="mt-2 space-y-1">
-                    {servicesMenu.residential.map((item) => (
-                      <li key={item.name}>
-                        <a href={item.href} className="block py-1 text-gray-700 hover:underline">
-                          {item.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                
-                {/* Short-Term Rentals */}
-                <div>
-                  <h4 className="text-sm font-semibold tracking-wide text-gray-900 uppercase mt-3">
-                    Short-Term Rentals
-                  </h4>
-                  <ul className="mt-2 space-y-1">
-                    {servicesMenu.shortTermRentals.map((item) => (
-                      <li key={item.name}>
-                        <a href={item.href} className="block py-1 text-gray-700 hover:underline">
-                          {item.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Commercial Cleaning */}
-                <div>
-                  <h4 className="text-sm font-semibold tracking-wide text-gray-900 uppercase mt-3">
-                    Commercial Cleaning
-                  </h4>
-                  <ul className="mt-2 space-y-1">
-                    {servicesMenu.commercialCleaning.map((item) => (
-                      <li key={item.name}>
-                        <a href={item.href} className="block py-1 text-gray-700 hover:underline">
-                          {item.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Other */}
-                <div>
-                  <h4 className="text-sm font-semibold tracking-wide text-gray-900 uppercase mt-3">
-                    Other
-                  </h4>
-                  <ul className="mt-2 space-y-1">
-                    {servicesMenu.other.map((item) => (
-                      <li key={item.name}>
-                        <a href={item.href} className="block py-1 text-gray-700 hover:underline">
-                          {item.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {/* ... (all your mobile services lists) ... */}
               </div>
             )}
-            {/* --- END: Mobile services menu --- */}
 
-            <a
+
+            {/* <-- MODIFIED: Locations (Mobile) --> */}
+            <button
+              onClick={() => setIsMobileLocationsOpen(!isMobileLocationsOpen)}
+              className="flex items-center justify-between w-full pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:underline"
+            >
+              <span>Locations</span>
+              <ChevronDown
+                className={`h-5 w-5 transform transition-transform ${isMobileLocationsOpen ? 'rotate-180' : 'rotate-0'}`}
+              />
+            </button>
+            {isMobileLocationsOpen && (
+              <div className="pl-8 pr-4 pb-2 space-y-1 bg-gray-50">
+                <ul className="mt-2 space-y-1">
+                  {Object.keys(locationsMenu).map((stateCode) => {
+                    const state = locationsMenu[stateCode];
+                    return (
+                      <li key={state.stateName}>
+                        <Link
+                          href={`/locations/${stateCode.toLowerCase()}`}
+                          className="block py-1 text-gray-700 hover:underline"
+                          onClick={closeMobileMenu}
+                        >
+                          {state.stateName}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+            {/* <-- MODIFIED: End Locations (Mobile) --> */}
+
+
+            <Link
               href="./pricingPage"
               className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:underline"
+              onClick={closeMobileMenu}
             >
               Pricing
-            </a>
-            <a
+            </Link>
+            <Link
               href="./contactForm"
               className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:underline"
+              onClick={closeMobileMenu}
             >
               Contact Us
-            </a>
+            </Link>
           </div>
           <div className="pt-4 pb-3 border-t border-gray-200">
-            {/* We can't use PrimaryButton here easily without props, so used <a> styled as a button */}
-            {/* <a
-              href="#"
-              className="block w-full text-left px-4 py-2 text-base font-medium text-blue-600 hover:bg-gray-50"
+            <PrimaryButton
+              className='text-white'
+              onClick={closeMobileMenu}
             >
-             
-            </a> */}
-            <PrimaryButton className='text-white'> Login</PrimaryButton>
-            <a
+              Login
+            </PrimaryButton>
+            <Link
               href="#"
               className="block w-full text-left px-4 py-2 text-base font-medium text-[#2937b1] hover:underline"
+              onClick={closeMobileMenu}
             >
               CALL NOW (844) 242-9464
-            </a>
+            </Link>
           </div>
         </div>
       )}

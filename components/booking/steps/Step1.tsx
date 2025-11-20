@@ -1,15 +1,7 @@
 'use client';
-import { useState } from 'react';
-// import HomeSizeCard from '../HomeSizeCard'; // Removed import
-// import { homeSizesData } from '../../../Data/homeSizes'; // Removed import
-import { FaHome, FaBuilding, FaHotel, FaHospital } from 'react-icons/fa';
-// import Calendar from 'react-calendar'; // Removed import
-// import 'react-calendar/dist/Calendar.css'; // Removed import
-
-// --- Mock Data & Components to Fix Build Errors ---
-
-// Mock data for homeSizesData
+import Image from 'next/image';
 import HomeSizeCard from '@/components/cards/HomeSizeCard';
+
 const homeSizesData = {
   regular: [
     { id: 1, title: 'Studio', subtitle: '1 bed / 1 bath', price: 100 },
@@ -37,15 +29,8 @@ const homeSizesData = {
   ],
 };
 
-// Mock HomeSizeCard component
-
-
-// --------------------------------------------------
-
-// ✅ Define the service type based on the keys of homeSizesData
 type ServiceType = keyof typeof homeSizesData;
 
-// ✅ 1. Define the shape of errors this component expects
 interface Step1Errors {
   zipCode?: string;
   selectedHomeSize?: string;
@@ -54,68 +39,57 @@ interface Step1Errors {
   frequency?: string;
 }
 
-// ✅ 2. Update props to accept errors and the setter
 interface Step1Props {
   bookingDetails: {
     zipCode: string;
-    serviceType: string; // Kept as string as it comes from form inputs
+    serviceType: string;
     selectedHomeSize: number | null;
     specialRequest: string;
-    date: Date | string | null; // Allow string for input
+    date: Date | string | null;
     time: string;
     frequency: string;
   };
   setBookingDetails: React.Dispatch<React.SetStateAction<any>>;
-  errors: Step1Errors; // <-- Add this
-  setErrors: React.Dispatch<React.SetStateAction<any>>; // <-- Add this
+  errors: Step1Errors;
+  setErrors: React.Dispatch<React.SetStateAction<any>>;
 }
 
 const icons: { [key: number]: React.ReactNode } = {
-  1: <img src="./images/house1-2.png" alt="Studio" />,
-  2: <img src="./images/house1-2.png" alt="Small" />,
-  3: <img src="./images/house3-4.png" alt="Medium" />,
-  4: <img src="./images/house3-4.png" alt="Large" />,
-  5: <img src="./images/house5.png" alt="X-Large" />,
-  6: <img src="./images/house6.png" alt="Mansion" />,
+  1: <Image src="/images/house1-2.png" alt="Studio" width={60} height={60} />,
+  2: <Image src="/images/house1-2.png" alt="Small" width={60} height={60} />,
+  3: <Image src="/images/house3-4.png" alt="Medium" width={60} height={60} />,
+  4: <Image src="/images/house3-4.png" alt="Large" width={60} height={60} />,
+  5: <Image src="/images/house5.png" alt="X-Large" width={60} height={60} />,
+  6: <Image src="/images/house6.png" alt="Mansion" width={60} height={60} />,
 };
 
-// ✅ 3. Destructure new props: errors and setErrors
 export default function Step1({ bookingDetails, setBookingDetails, errors, setErrors }: Step1Props) {
-  // const [showCalendar, setShowCalendar] = useState(false); // Removed for <input type="date">
-  console.log("booking Details", bookingDetails);
   const today = new Date();
 
-  // ✅ 4. Update handleChange to clear errors on input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-
     if (errors[name as keyof Step1Errors]) {
       setErrors((prev: any) => ({ ...prev, [name]: undefined }));
     }
 
     setBookingDetails((prev: any) => {
       let updated = { ...prev, [name]: value };
-
       if (name === "serviceType" && prev.selectedHomeSize) {
         const selectedSize = homeSizesData[value as ServiceType]?.find(
           (size) => size.id === prev.selectedHomeSize
         );
-
         if (selectedSize) {
           updated.price = selectedSize.price;
           updated.title = selectedSize.title;
         } else {
           updated.price = null;
-          updated.selectedHomeSize = null; // Deselect if size doesn't exist in new type
+          updated.selectedHomeSize = null;
         }
       }
-
-      // Handle date input
       if (name === "date") {
         const formattedDate = formatDate(new Date(value.replace(/-/g, '/')));
         updated.date = formattedDate;
       }
-
       return updated;
     });
   };
@@ -124,51 +98,31 @@ export default function Step1({ bookingDetails, setBookingDetails, errors, setEr
     if (!date) return '';
     const d = date instanceof Date ? date : new Date(date);
     if (isNaN(d.getTime())) return '';
-    return d.toLocaleDateString('en-US', {
-      month: '2-digit',
-      day: '2-digit',
-      year: 'numeric',
-    });
+    return d.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
   };
 
-  // Helper to format date for <input type="date"> value
   const formatDateForInput = (date: Date | string | null) => {
     if (!date) return '';
     const d = new Date(date);
     if (isNaN(d.getTime())) return '';
-
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+      d.getDate()
+    ).padStart(2, '0')}`;
   };
 
-
-
-  // ✅ 5. Update handleDateChange to clear date error
   const handleDateChange = (date: Date | null) => {
-    if (!date) return; // Don't do anything if date is null
-
-    // Clear date error on selection
+    if (!date) return;
     if (errors.date) {
       setErrors((prev: any) => ({ ...prev, date: undefined }));
     }
-
     const formattedDate = formatDate(date);
-    setBookingDetails((prev: any) => ({
-      ...prev,
-      date: formattedDate,
-    }));
+    setBookingDetails((prev: any) => ({ ...prev, date: formattedDate }));
   };
 
-  // ✅ 6. Update handleHomeSizeSelect to clear home size error
   const handleHomeSizeSelect = (id: number, price: number, title: string) => {
-    // Clear home size error on selection
     if (errors.selectedHomeSize) {
       setErrors((prev: any) => ({ ...prev, selectedHomeSize: undefined }));
     }
-
     setBookingDetails((prev: any) => ({
       ...prev,
       selectedHomeSize: id,
@@ -178,36 +132,35 @@ export default function Step1({ bookingDetails, setBookingDetails, errors, setEr
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">Your Booking Details</h2>
-      <p className="mb-6 text-gray-600">
-        Enter zip code then choose service type, home size and other details
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Header */}
+      <h2 className="text-2xl md:text-3xl font-bold mb-2 text-center md:text-left">Your Booking Details</h2>
+      <p className="mb-6 text-gray-600 text-sm md:text-base text-center md:text-left">
+        Enter your ZIP code, select a service, home size, and other details below.
       </p>
 
       {/* ZIP Code */}
-      <div className="mb-4">
+      <div className="mb-5">
         <input
           type="text"
           name="zipCode"
           value={bookingDetails.zipCode}
           onChange={handleChange}
-          // ✅ 7. Add conditional styling and error display
-          className={`w-full p-3 border rounded-lg focus:ring-2 focus:border-transparent ${errors.zipCode ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
-            }`}
+          className={`w-full p-3 border rounded-lg text-sm md:text-base focus:ring-2 focus:border-transparent ${
+            errors.zipCode ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+          }`}
           placeholder="Enter ZIP code"
         />
-        {errors.zipCode && (
-          <p className="text-red-500 text-sm mt-1">{errors.zipCode}</p>
-        )}
+        {errors.zipCode && <p className="text-red-500 text-sm mt-1">{errors.zipCode}</p>}
       </div>
 
-      {/* Service Type (No validation needed, has default) */}
-      <div className="mb-4">
+      {/* Service Type */}
+      <div className="mb-5">
         <select
           name="serviceType"
           value={bookingDetails.serviceType}
           onChange={handleChange}
-          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full p-3 border border-gray-300 rounded-lg text-sm md:text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
           <option value="deep">Deep Cleaning (for homes that have not been cleaned in 3+ weeks)</option>
           <option value="regular">Regular Cleaning</option>
@@ -215,88 +168,79 @@ export default function Step1({ bookingDetails, setBookingDetails, errors, setEr
         </select>
       </div>
 
-      {/* Home Size */}
+      {/* Home Sizes */}
       <div className="mb-6">
-        <div className=" flex flex-wrap gap-[13px]">
-          {/* ✅ TYPE-FIX: Cast serviceType to ServiceType (keyof typeof homeSizesData) */}
+        <div className="grid grid-cols-2 lg:grid-cols-6  gap-3 sm:gap-4">
           {homeSizesData[bookingDetails.serviceType as ServiceType]?.map((size) => (
             <HomeSizeCard
               key={size.id}
               title={size.title}
               subtitle={size.subtitle}
-              icon={icons[size.id as keyof typeof icons]} // Also added a type guard for icons
+              icon={icons[size.id as keyof typeof icons]}
               selected={bookingDetails.selectedHomeSize === size.id}
               onClick={() => handleHomeSizeSelect(size.id, size.price, size.title)}
             />
           ))}
         </div>
-        {/* ✅ 8. Add error display for Home Size */}
-        {errors.selectedHomeSize && (
-          <p className="text-red-500 text-sm mt-2">{errors.selectedHomeSize}</p>
-        )}
+        {errors.selectedHomeSize && <p className="text-red-500 text-sm mt-2">{errors.selectedHomeSize}</p>}
       </div>
 
-      {/* Date & Time */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        {/* Calendar Input - Replaced with <input type="date"> */}
+      {/* Date, Time, Frequency */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        {/* Date */}
         <div>
           <input
             type="date"
             name="date"
             value={formatDateForInput(bookingDetails.date)}
-            // Use handleDateChange to process the date and clear errors
-            onChange={(e) => handleDateChange(e.target.value ? new Date(e.target.value.replace(/-/g, '/')) : null)}
+            onChange={(e) =>
+              handleDateChange(e.target.value ? new Date(e.target.value.replace(/-/g, '/')) : null)
+            }
             min={today.toISOString().split('T')[0]}
-            className={`p-3 border rounded-lg focus:ring-2 focus:border-transparent w-full ${errors.date ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
-              }`}
+            className={`p-3 border rounded-lg text-sm md:text-base focus:ring-2 focus:border-transparent w-full ${
+              errors.date ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+            }`}
           />
-          {/* ✅ 10. Add error display for Date */}
-          {errors.date && (
-            <p className="text-red-500 text-sm mt-1">{errors.date}</p>
-          )}
+          {errors.date && <p className="text-red-500 text-sm mt-1">{errors.date}</p>}
         </div>
 
         {/* Time */}
-        <div> {/* Added div for error message layout */}
+        <div>
           <select
             name="time"
             value={bookingDetails.time}
             onChange={handleChange}
-            className={`w-full p-3 border rounded-lg focus:ring-2 focus:border-transparent ${errors.time ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
-              }`}
+            className={`w-full p-3 border rounded-lg text-sm md:text-base focus:ring-2 focus:border-transparent ${
+              errors.time ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+            }`}
           >
-            <option value="">Select Time</option> {/* ✅ Correct placeholder */}
+            <option value="">Select Time</option>
             <option value="10:00 AM">10:00 AM</option>
             <option value="11:00 AM">11:00 AM</option>
             <option value="1:00 PM">1:00 PM</option>
             <option value="3:00 PM">3:00 PM</option>
           </select>
-
-          {/* ✅ 12. Add error display for Time */}
-          {errors.time && (
-            <p className="text-red-500 text-sm mt-1">{errors.time}</p>
-          )}
+          {errors.time && <p className="text-red-500 text-sm mt-1">{errors.time}</p>}
         </div>
 
         {/* Frequency */}
-        <div> {/* Added div for error message layout */}
+        <div>
           <select
             name="frequency"
             value={bookingDetails.frequency}
             onChange={handleChange}
-            // ✅ 13. Add conditional styling
-            className={`w-full p-3 border rounded-lg focus:ring-2 focus:border-transparent ${errors.frequency ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
-              }`}
+            className={`w-full p-3 border rounded-lg text-sm md:text-base focus:ring-2 focus:border-transparent ${
+              errors.frequency
+                ? 'border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:ring-blue-500'
+            }`}
           >
             <option value="">Select Frequency</option>
             <option>Weekly Cleaning (20%)</option>
             <option>Bi-weekly (15%)</option>
             <option>Monthly (10%)</option>
           </select>
-          {/* ✅ 14. Add error display for Frequency */}
-          {errors.frequency && (
-            <p className="text-red-500 text-sm mt-1">{errors.frequency}</p>
-          )}
+          {errors.frequency && <p className="text-red-500 text-sm mt-1">{errors.frequency}</p>}
         </div>
       </div>
     </div>
