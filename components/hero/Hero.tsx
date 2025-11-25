@@ -114,13 +114,13 @@ export default function Hero() {
       </section>
 
       {/* Services Section */}
-      <section className="py-16 bg-[#f4f4f4]">
+      <section className="py-35 bg-[#f4f4f4]">
         <div className="container mx-auto px-4">
-          <h2 className="max-w-[540px] font-bold text-[28px] sm:text-[36px] lg:text-[48px]">
+          <h2 className="max-w-[540px]   font-bold text-[28px] sm:text-[36px] lg:text-[48px]">
             Cleaning services for just about anyone
           </h2>
 
-          <div className="flex flex-wrap justify-center gap-6 pt-[30px]">
+          <div className="flex flex-wrap justify-center gap-20 pt-[30px]">
             {servicesData.map((card, index) => (
               <ServiceCard
                 key={index}

@@ -7,6 +7,7 @@ import Breadcrumb from "@/components/BreadCrumb";
 import localBusinessSchema from "@/schemas/localBusinessSchema";
 
 
+
 const inter = Inter({ subsets: ["latin"] });
 
 // --- UNCOMMENT THIS BLOCK ---

@@ -4,13 +4,19 @@ import Link from 'next/link';
 
 import { locationsMenu } from '@/Data/locationsData';
 import { notFound } from 'next/navigation';
-import CityCard from '@/components/CityCard'; // Import your new reusable component
+// import CityCard from '@/components/CityCard'; // Import your new reusable component
 import PrimaryButton from '@/components/buttons/PrimaryButton';
-import SecondaryButton from '@/components/buttons/SecondaryButton';
+// import SecondaryButton from '@/components/buttons/SecondaryButton';
 import HeroImage from '@/components/hero/HeroImage';
-
+import ServiceAreaDropdown from '../ServiceAreaDropdown';
 import servicesData from '@/Data/servicesData';
 import ServiceCard from '@/components/cards/ServiceCard';
+import StateContentRenderer from "@/components/content/StateContentRenderer";
+
+// import { stateContent } from "@/Data/locationsData";
+
+<StateContentRenderer content={locationsMenu.TX} />
+
 
 // This tells Next.js what props to expect from the URL
 
@@ -24,7 +30,8 @@ interface StatePageProps {
 export default  async function StatePage({ params }: StatePageProps) {
 
   const res = await params
-   console.log("RAW params:", res);
+  //  console.log("RAW params:", res);
+  
 // console.log("STRINGIFIED params:", JSON.stringify(params));
 
 
@@ -89,35 +96,43 @@ export default  async function StatePage({ params }: StatePageProps) {
       
                 <div className=" flex-1 lg:absolute right-0 bottom-0 top-0 lg:max-h-[90vh] lg:max-w-[50%] z-[-1]">
                   <HeroImage />
+
                 </div>
               </div>
             </section>
-    <div className=" space-y-6 px-[10px] mt-[40px] mb-[40px] ">
+          <div className=" space-y-6 px-[10px] mt-[40px] mb-[40px] ">
+      
+            {/* Insert the Oklahoma-style dropdown right below the hero */}
+            <div className="container mx-auto">
+              <ServiceAreaDropdown cities={stateData.cities} />
+            </div>
 
-      <div className="flex justify-evenly flex-wrap border border-[#eee] py-[15px] ">
-        {stateData.cities.map((city) => (
-          <CityCard key={city.name} city={city} />
-        ))}
-      </div>
-    </div>
+          </div>
     <section className='container mx-auto px-4'>
         <h2 className="max-w-[540px] font-bold text-[28px] sm:text-[36px] lg:text-[48px]">
                   Cleaning services for just about anyone
                 </h2>
       
-                <div className="flex flex-wrap justify-center gap-6 pb-[30px] pt-[30px]">
+                <div className="flex flex-wrap justify-center gap-20 pb-[30px] pt-[30px]">
                   {servicesData.map((card, index) => (
                     <ServiceCard
                       key={index}
                       title={card.title}
                       icon={card.icon}
                       services={card.services}
+                      link={card.link} 
                       // onLearnMore={() => alert(`Learn more about ${card.title}`)}
                       className="w-full sm:w-[284px]"
                     />
                   ))}
                 </div>
     </section>
+    <div className='bg-white m-5'>
+          <StateContentRenderer content={stateData} />
+
+    </div>
+    
+
     </>
   );
 }
