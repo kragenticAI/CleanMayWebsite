@@ -1,5 +1,5 @@
 import PrimaryButton from "@/components/buttons/PrimaryButton";
-import { otherServiceAreas } from "../../../data/otherServicvices";
+import { otherServiceAreas } from "../../../data/otherServices";
 import { notFound } from "next/navigation";
 
 // This interface defines what 'params' looks like
