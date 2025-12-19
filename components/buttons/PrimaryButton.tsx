@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 
 interface PrimaryButtonProps {
   children: ReactNode;
+  type: 'button' | 'submit' | 'reset';
   onClick?: () => void;
   className?: string;
 }
@@ -11,7 +12,7 @@ interface PrimaryButtonProps {
 export default function PrimaryButton({
   children,
   onClick,
-
+  type = "button",
   className = "",
 }: PrimaryButtonProps) {
   return (

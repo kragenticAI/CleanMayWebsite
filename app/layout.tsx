@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ["latin"] });
 // --- UNCOMMENT THIS BLOCK ---
 // This sets the default title and description for your entire site.
 export const metadata: Metadata = {
-  title: "Pro Housekeepers - Trusted Cleaning Services",
+  title: "Clean May - Trusted Cleaning Services",
   description: "Easy, no-fuss cleaning services for busy people.",
 };
 // --- END UNCOMMENT ---

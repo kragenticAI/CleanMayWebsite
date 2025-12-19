@@ -9,7 +9,7 @@ import ServiceCard from '../cards/ServiceCard';
 import BookingForm from '../booking/BookingForm';
 import BookingSummary from '../booking/BookingSummary';
 import SafetyCard from '../cards/SafetyCard';
-import servicesData from '@/Data/servicesData';
+import servicesData from '@/data/servicesData';
 
 export default function Hero() {
   const today = new Date();

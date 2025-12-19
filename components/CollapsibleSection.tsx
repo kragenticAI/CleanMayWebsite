@@ -24,7 +24,7 @@ const CollapsibleSection: React.FC<ICollapsibleSectionProps> = ({
 
   return (
     // Add margin for spacing between sections
-    <div className="w-full max-w-3xl my-4"> 
+    <div className="w-full  my-4"> 
       
       {/* 1. Use the reusable header */}
       <CollapsibleHeader 

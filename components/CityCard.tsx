@@ -1,6 +1,6 @@
 // components/CityCard.tsx
 import Link from 'next/link';
-import { LocationCity } from '@/Data/locationsData'; // Import the type
+import { LocationCity } from '@/data/locationsData'; // Import the type
 import { ChevronRight } from 'lucide-react';
 
 interface CityCardProps {

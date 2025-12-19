@@ -1,5 +1,5 @@
 import PrimaryButton from "@/components/buttons/PrimaryButton";
-import servicesData from "@/Data/servicesData";
+import servicesData from "@/data/servicesData";
 import HeroImage from "@/components/hero/HeroImage";
 import Image from "next/image";
 import Link from "next/link";

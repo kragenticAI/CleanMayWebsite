@@ -1,82 +1,65 @@
 'use client';
 
 import React, { useState } from 'react';
-import { locationsMenu } from '@/Data/locationsData';
+import { locationsMenu, LocationState } from '@/data/locationsData';
 import Link from 'next/link';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import PrimaryButton from '../buttons/PrimaryButton';
 import Image from 'next/image';
+import servicesData from '@/data/servicesData';
 
-// --- TypeScript Types ---
+// --- TypeScript Types (CORRECTED) ---
 
-// Type for a single link item
+// Type for a single link item (the output format for mapping)
 interface MenuItem {
   name: string;
   href: string;
 }
 
-// Type for the Services menu structure
-interface ServicesMenu {
-  residential: MenuItem[];
-  shortTermRentals: MenuItem[];
-  commercialCleaning: MenuItem[];
-  special: MenuItem[];
+// Defines the structure of a single service link object inside a category
+interface ServiceLink {
+  name: string;
+  link: string; // The specific URL for this service
 }
 
-// Type for the Locations menu structure
+// Defines the structure of a top-level category in servicesData
+interface ServiceCategory {
+  title: string;
+  icon: { src: string; alt: string };
+  link: string; // The main link for the category
+  services: ServiceLink[]; // ✅ CORRECT: Array of ServiceLink objects
+}
 
-
-// Type for DropdownLink props
 interface DropdownLinkProps {
   href: string;
   children: React.ReactNode;
   onClick?: () => void;
 }
 
+// --- Helper Function (CORRECTED) ---
+
+/**
+ * Maps the raw service objects ({ name, link }) to the standardized { name, href } MenuItem type.
+ */
+const getServiceMenuLinks = (category: ServiceCategory): MenuItem[] => {
+
+  return category.services.map(service => ({
+    name: service.name,
+    href: service.link,
+  }));
+};
+
 // --- Components ---
 
 const DropdownLink: React.FC<DropdownLinkProps> = ({ href, children, onClick }) => (
- 
   <Link
     href={href}
-    className="block p-3 -mx-2 rounded-lg text-gray-700 font-medium hover:underline" // Updated style
+    className="block p-3 -mx-2 rounded-lg text-gray-700 font-medium hover:underline"
     onClick={onClick}
   >
     {children}
   </Link>
 );
-
-// --- Data ---
-
-// Data for the services mega-menu
-const servicesMenu: ServicesMenu = {
-  residential: [
-    { name: 'Regular Cleaning', href: '/service/residential/regularcleaning' },
-    { name: 'Deep Cleaning', href: '/service/residential/deepcleaning' },
-    { name: 'Moving Cleaning', href: '/service/residential/movingcleaning' },
-    { name: 'Post-Construction Cleaning', href: '/service/residential/postconstructioncleaning' },
-    { name: 'One Time Cleaning', href: '/service/residential/onetimecleaning' },
-    { name: 'Recurring Cleaning', href: '/service/residential/recurringcleaning' },
-  ],
-  shortTermRentals: [
-    { name: 'Turnover Service', href: '/service/shortTerm/turnovercleaning' },
-    { name: 'Inventory Management', href: '#' },
-    { name: 'Laundry Service', href: '#' },
-  ],
-  commercialCleaning: [
-    { name: 'Office space', href: '/service/commercial/officespace' },
-    { name: 'End of tenancy cleaning', href: '/service/commercial/endoftenancycleaning' },
-    { name: 'Educational institutions', href: '/service/commercial/educationalinstitutions' },
-    { name: 'Healthcare settings', href: '/service/commercial/healthcaresettings' },
-  ],
-  special: [
-    { name: 'Organizing Help', href: '/service/special/organizinghelp' },
-    { name: 'Yacht Cleaning', href: '/service/special/yachtcleaning' },
-  ],
-};
-
-
-
 
 // --- Main Navbar Component ---
 
@@ -123,74 +106,35 @@ export default function Navbar() {
             </button>
 
             {/* Dropdown Panel */}
-            <div className={`absolute z-20 top-full mt-[20px] w-screen max-w-4xl transform transition-all duration-300 ease-in-out left-1 -translate-x-1  ${isDesktopServicesOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+            <div className={`absolute z-20 top-full mt-[20px] w-screen max-w-4xl transform transition-all duration-300 ease-in-out left-1 -translate-x-1  ${isDesktopServicesOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
               }`}>
-              <div className="overflow-hidden rounded-lg shadow-lg  ">
+              <div className="overflow-hidden rounded-lg shadow-lg  ">
+
+                {/* *** START DYNAMICALLY RENDERED DESKTOP SERVICES *** */}
                 <div className="relative grid gap-8 bg-white p-8 grid-cols-4 ">
-                  {/* Residential */}
-                  <div>
-                    <h3 className="text-sm font-semibold tracking-wide text-gray-900 uppercase">
-                      Residential
-                    </h3>
-                    <ul className="mt-4 space-y-2">
-                      {servicesMenu.residential.map((item) => (
-                        <li key={item.name}>
-                          <DropdownLink href={item.href} onClick={() => setIsDesktopServicesOpen(false)}>
-                            {item.name}
-                          </DropdownLink>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  {servicesData.map((category) => (
+                    <div key={category.title}>
+                      {/* Link the header to the main category link */}
+                      <Link href={category.link} onClick={() => setIsDesktopServicesOpen(false)}>
+                        <h3 className="text-sm font-semibold tracking-wide text-gray-900 uppercase hover:underline">
+                          {category.title}
+                        </h3>
+                      </Link>
 
-                  {/* Short-Term Rentals */}
-                  <div>
-                    <h3 className="text-sm font-semibold tracking-wide text-gray-900 uppercase">
-                      Short-Term Rentals
-                    </h3>
-                    <ul className="mt-4 space-y-2">
-                      {servicesMenu.shortTermRentals.map((item) => (
-                        <li key={item.name}>
-                          <DropdownLink href={item.href} onClick={() => setIsDesktopServicesOpen(false)}>
-                            {item.name}
-                          </DropdownLink>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Commercial Cleaning */}
-                  <div>
-                    <h3 className="text-sm font-semibold tracking-wide text-gray-900 uppercase">
-                      Commercial Cleaning
-                    </h3>
-                    <ul className="mt-4 space-y-2">
-                      {servicesMenu.commercialCleaning.map((item) => (
-                        <li key={item.name}>
-                          <DropdownLink href={item.href} onClick={() => setIsDesktopServicesOpen(false)}>
-                            {item.name}
-                          </DropdownLink>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Special */}
-                  <div>
-                    <h3 className="text-sm font-semibold tracking-wide text-gray-900 uppercase">
-                      Special
-                    </h3>
-                    <ul className="mt-4 space-y-2">
-                      {servicesMenu.special.map((item) => (
-                        <li key={item.name}>
-                          <DropdownLink href={item.href} onClick={() => setIsDesktopServicesOpen(false)}>
-                            {item.name}
-                          </DropdownLink>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                      <ul className="mt-4 space-y-2">
+                        {getServiceMenuLinks(category).map((item) => (
+                          <li key={item.name}>
+                            <DropdownLink href={item.href} onClick={() => setIsDesktopServicesOpen(false)}>
+                              {item.name}
+                            </DropdownLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
                 </div>
+                {/* *** END DYNAMICALLY RENDERED DESKTOP SERVICES *** */}
+
               </div>
             </div>
           </div>
@@ -203,7 +147,7 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* <-- MODIFIED: Locations Simple Dropdown (Desktop) --> */}
+          {/* Locations Simple Dropdown (Desktop) - Logic remains unchanged */}
           <div
             className="relative"
             onMouseEnter={() => setIsDesktopLocationsOpen(true)}
@@ -225,15 +169,10 @@ export default function Navbar() {
 
                   {/* This just lists the states. */}
                   <ul className="space-y-1">
-                    {/* Because we typed locationsMenu, stateCode is a string */}
                     {Object.keys(locationsMenu).map((stateCode) => {
-                      // and state is a LocationState
-                      console.log("statecode", stateCode);
-                      const state = locationsMenu[stateCode];
-                      console.log("state", state);
+                      const state = locationsMenu[stateCode as keyof typeof locationsMenu] as LocationState;
                       return (
                         <li key={state.stateName}>
-                          {/* This link goes to the new page, e.g., /locations/tx */}
                           <DropdownLink
                             href={`/locations/${stateCode.toLowerCase()}`}
                             onClick={() => setIsDesktopLocationsOpen(false)}
@@ -248,14 +187,18 @@ export default function Navbar() {
               </div>
             </div>
           </div>
-          {/* <-- MODIFIED: End Locations Menu --> */}
+          {/* End Locations Menu */}
 
 
           <Link href="/contactForm" className="text-[14px] lg:text-[18px] font-semibold hover:underline">Contact Us</Link>
         </div>
 
         <div className='hidden md:flex justify-center items-center gap-[15px]'>
-          <PrimaryButton className='text-white hover:underline'> Login</PrimaryButton>
+          <Link href="/estimate">
+            <PrimaryButton type="button" className="text-white hover:underline">
+              Request a Free Estimate
+            </PrimaryButton>
+          </Link>
           <div className="text-[#2937b1] font-semibold text-[14px] lg:text-[18px] cursor-pointer hover:underline">
             CALL NOW (844) 242-9464
           </div>
@@ -299,12 +242,41 @@ export default function Navbar() {
             </button>
             {isMobileServicesOpen && (
               <div className="pl-8 pr-4 pb-2 space-y-3 bg-gray-50">
-                {/* ... (all your mobile services lists) ... */}
+                {/* *** START DYNAMICALLY RENDERED MOBILE SERVICES *** */}
+                {servicesData.map((category) => {
+                  const serviceItems = getServiceMenuLinks(category);
+
+                  return (
+                    <div key={category.title} className='pt-2'>
+                      {/* Link the header to the main category link */}
+                      <Link href={category.link} onClick={closeMobileMenu}>
+                        <h4 className="text-sm font-semibold tracking-wide text-gray-800 border-b border-gray-200 pb-1 hover:underline">
+                          {category.title}
+                        </h4>
+                      </Link>
+
+                      <ul className="mt-1 space-y-1">
+                        {serviceItems.map((item) => (
+                          <li key={item.name}>
+                            <Link
+                              href={item.href}
+                              className="block py-1 text-gray-600 hover:underline"
+                              onClick={closeMobileMenu}
+                            >
+                              {item.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })}
+                {/* *** END DYNAMICALLY RENDERED MOBILE SERVICES *** */}
               </div>
             )}
 
 
-            {/* <-- MODIFIED: Locations (Mobile) --> */}
+            {/* Locations (Mobile) - Logic remains unchanged */}
             <button
               onClick={() => setIsMobileLocationsOpen(!isMobileLocationsOpen)}
               className="flex items-center justify-between w-full pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:underline"
@@ -318,7 +290,7 @@ export default function Navbar() {
               <div className="pl-8 pr-4 pb-2 space-y-1 bg-gray-50">
                 <ul className="mt-2 space-y-1">
                   {Object.keys(locationsMenu).map((stateCode) => {
-                    const state = locationsMenu[stateCode];
+                    const state = locationsMenu[stateCode as keyof typeof locationsMenu] as LocationState;
                     return (
                       <li key={state.stateName}>
                         <Link
@@ -334,7 +306,7 @@ export default function Navbar() {
                 </ul>
               </div>
             )}
-            {/* <-- MODIFIED: End Locations (Mobile) --> */}
+            {/* End Locations (Mobile) */}
 
 
             <Link
@@ -353,12 +325,11 @@ export default function Navbar() {
             </Link>
           </div>
           <div className="pt-4 pb-3 border-t border-gray-200">
-            <PrimaryButton
-              className='text-white'
-              onClick={closeMobileMenu}
-            >
-              Login
+              <Link href="/estimate">
+            <PrimaryButton type="button" className="text-white hover:underline">
+              Request a Free Estimate
             </PrimaryButton>
+          </Link>
             <Link
               href="#"
               className="block w-full text-left px-4 py-2 text-base font-medium text-[#2937b1] hover:underline"

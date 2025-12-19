@@ -14,6 +14,7 @@ export interface LocationCity {
 export interface LocationState {
   stateName: string;
   cities: LocationCity[];
+  otherServiceAreas: string[];
 }
 
 // Type for the main locations object
@@ -31,13 +32,24 @@ export const locationsMenu: LocationsMenu = {
       { name: 'Cypress', href: '/locations/tx/cypress',longtitude:"29.7601",latitude:" 95.3701"  },
       { name: 'The Woodlands', href: '/locations/tx/the-woodlands',longtitude:"29.7601",latitude:" 95.3701" },
       { name: 'Katy', href: '/locations/tx/katy',longtitude:"29.7601",latitude:" 95.3701"  },
-    ]
+    ],
+    otherServiceAreas: [
+          "Adkins", "Atacosa", "Austin", "Boerne",
+      
+        
+        ]
+
   },
   LA: {
     stateName: 'Louisiana',
     cities: [
       { name: 'New Orleans', href: '/locations/la/new-orleans',longtitude:"29.7601",latitude:" 95.3701"  },
       { name: 'Baton Rouge', href: '/locations/la/baton-rouge',longtitude:"29.7601",latitude:" 95.3701"  },
-    ]
+    ],
+      otherServiceAreas: ["Adkins", "Atacosa", "Austin", "Boerne", "Buda", "Cedar Creek", "Cibolo", "Converse", "Coupland", "Dale",
+      "Dallas", "Del Valle", "Driftwood", "Dripping Springs",
+      "Elgin", "Elmendorf", "Floresville", "Garland",]
+
   },
+  
 };

@@ -3,31 +3,40 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
+import path from 'path';
 
 // --- 1. Define your breadcrumb routes ---
 const BREADCRUMB_MAP: Record<string, { label: string; href?: string | null }[]> = {
-  '/service/residential/regularcleaning': [{ label: 'Regular Cleaning' }],
-  '/service/residential/deepcleaning': [{ label: 'Deep Cleaning' }],
-  '/service/residential/movingcleaning': [{ label: 'Moving Cleaning' }],
-  '/service/residential/postconstructioncleaning': [{ label: 'Postconstruction Cleaning' }],
-  '/service/residential/onetimecleaning': [{ label: 'Onetime Cleaning' }],
-  '/service/residential/recurringcleaning': [{ label: 'Recurring Cleaning' }],
+  '/services/residential/regularcleaning': [{ label: 'Regular Cleaning' }],
+  '/services/residential/deepcleaning': [{ label: 'Deep Cleaning' }],
+  '/services/residential/movingcleaning': [{ label: 'Moving Cleaning' }],
+  '/services/residential/postconstructioncleaning': [{ label: 'Postconstruction Cleaning' }],
+  '/services/residential/onetimecleaning': [{ label: 'Onetime Cleaning' }],
+  '/services/residential/recurringcleaning': [{ label: 'Recurring Cleaning' }],
 
-  '/service/commercial/endoftenancycleaning': [{ label: 'End of tenancy cleaning' }],
-  '/service/commercial/officespace': [{ label: 'Office Space' }],
-  '/service/commercial/educationalinstitutions': [{ label: 'Educational Institutions' }],
-  '/service/commercial/healthcaresettings': [{ label: 'HealthCare Settings' }],
+  '/services/commercial/endoftenancycleaning': [{ label: 'End of tenancy cleaning' }],
+  '/services/commercial/officespace': [{ label: 'Office Space' }],
+  '/services/commercial/educationalinstitutions': [{ label: 'Educational Institutions' }],
+  '/services/commercial/healthcaresettings': [{ label: 'HealthCare Settings' }],
+  '/services/shortTerm/inventorymanagement': [{ label: 'Inventory Management' }],
+   '/services/shortTerm/turnovercleaning': [{ label: 'Turn Over Cleaning' }],
+  '/services/shortTerm/laundryservice': [{ label: 'Laundry Service' }],
 
-  '/service/special/yachtcleaning': [{ label: 'Yatch Cleaning' }],
+  '/services/special/hoardercleanup': [{ label: 'Hoarder Cleanup' }],
+  '/services/special/organizinghelp': [{ label: 'Organizing Help' }],
+
+
+
+  '/services/special/yachtcleaning': [{ label: 'Yatch Cleaning' }],
 };
 
 // --- 2. Create default breadcrumbs for unmapped routes ---
 const createDefaultCrumbs = (segments: string[]) => {
-  console.log("segments",segments);
+  // console.log("segments",segments);
   return segments.map((segment, index) => {
     const label = segment
       .split('-')
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .map((w) => w)
       .join(' ');
       console.log("label",label);
 
@@ -51,6 +60,7 @@ export default function Breadcrumb({color}:any) {
 
   // split path → remove empty segments
   const segments = pathname.split('/').filter(Boolean);
+  console.log("segments",segments);
 
   // --- 3. Find mapped crumbs or fallback to default ---
   let crumbs = BREADCRUMB_MAP[pathname] || createDefaultCrumbs(segments);
@@ -79,11 +89,11 @@ export default function Breadcrumb({color}:any) {
       </div>
     );
   });
-
+console.log("basepath",basePath);
   return (
     <div className={basePath==='/locations'?'bg-transparent':'bg-[#f4f4f4]'}>
       <div className="container mx-auto max-w-7xl px-4">
-        {pathname !== '/' && pathname !== '/bookNow' && (
+        {pathname !== '/' && pathname !== '/bookNow' && basePath!=="/otherserviceareas"&& (
           <nav className="flex items-center text-sm text-gray-500 py-8 mx-auto">
             <Link href="/" className="text-gray-600 hover:text-blue-600 transition-colors">
               Home

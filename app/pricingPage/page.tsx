@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { PricingCard } from '../../components/cards/PricingCard';
-import { addOnServices } from '../../Data/addOnServices';
-import { pricingPlans } from '../../Data/pricingPlans';
+import { addOnServices } from '../../data/addOnServices';
+import { pricingPlans } from '../../data/pricingPlans';
 
 // --- Reusable Feature List Item ---
 // We can reuse the one from WhyUsPage, but I'll include it here
