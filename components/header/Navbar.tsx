@@ -91,8 +91,8 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
-          <Link href="/whyUs" className="text-[14px] lg:text-[18px] font-semibold hover:underline">Why us</Link>
+        <div className="hidden lg:flex items-center space-x-4">
+          <Link href="/whyUs" className="text-[14px] lg:text-[16px] font-semibold hover:underline">Why us</Link>
 
           {/* --- Services Mega-Menu (Desktop) --- */}
           <div
@@ -100,7 +100,7 @@ export default function Navbar() {
             onMouseEnter={() => setIsDesktopServicesOpen(true)}
             onMouseLeave={() => setIsDesktopServicesOpen(false)}
           >
-            <button className="text-[14px] lg:text-[18px] font-semibold hover:underline flex items-center ">
+            <button className="text-[14px] lg:text-[16px] font-semibold hover:underline flex items-center ">
               <span>Services</span>
               <ChevronDown className="ml-1 h-5 w-5 " />
             </button>
@@ -142,7 +142,7 @@ export default function Navbar() {
 
 
           <div className="relative group">
-            <Link href="/pricingPage" className="text-[14px] lg:text-[18px] font-semibold hover:underline flex items-center">
+            <Link href="/pricingPage" className="text-[14px] lg:text-[16px] font-semibold hover:underline flex items-center">
               Pricing
             </Link>
           </div>
@@ -153,7 +153,7 @@ export default function Navbar() {
             onMouseEnter={() => setIsDesktopLocationsOpen(true)}
             onMouseLeave={() => setIsDesktopLocationsOpen(false)}
           >
-            <button className="text-[14px] lg:text-[18px] font-semibold hover:underline flex items-center ">
+            <button className="text-[14px] lg:text-[16px] font-semibold hover:underline flex items-center ">
               <span>Locations</span>
               <ChevronDown className="ml-1 h-5 w-5 " />
             </button>
@@ -190,23 +190,23 @@ export default function Navbar() {
           {/* End Locations Menu */}
 
 
-          <Link href="/contactForm" className="text-[14px] lg:text-[18px] font-semibold hover:underline">Contact Us</Link>
+          <Link href="/contactForm" className="text-[14px] lg:text-[16px] font-semibold hover:underline">Contact Us</Link>
         </div>
 
-        <div className='hidden md:flex justify-center items-center gap-[15px]'>
+        <div className='hidden lg:flex justify-center items-center gap-[15px]'>
           <Link href="/estimate">
             <PrimaryButton  className="text-white hover:underline">
               Request a Free Estimate
             </PrimaryButton>
           </Link>
-          <div className="text-[#2937b1] font-semibold text-[14px] lg:text-[18px] cursor-pointer hover:underline">
+          <div className="text-[#2937b1] font-semibold text-[14px] lg:text-[16px] cursor-pointer hover:underline">
             CALL NOW (844) 242-9464
           </div>
         </div>
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-gray-700"
+          className="lg:hidden text-gray-700"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <span className="sr-only">Open main menu</span>
@@ -220,7 +220,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg z-20 border-t border-gray-200">
+        <div className="lg:hidden absolute top-full left-0 w-full bg-white shadow-lg z-20 border-t border-gray-200">
           <div className="pt-2 pb-3 space-y-1">
             <Link
               href="/whyUs"
@@ -324,12 +324,12 @@ export default function Navbar() {
               Contact Us
             </Link>
           </div>
-          <div className="pt-4 pb-3 border-t border-gray-200">
-              <Link href="/estimate">
-            <PrimaryButton  className="text-white hover:underline">
-              Request a Free Estimate
-            </PrimaryButton>
-          </Link>
+          <div className="p-4 border-t border-gray-200">
+            <Link href="/estimate">
+              <PrimaryButton  className="text-white hover:underline">
+                Request a Free Estimate
+              </PrimaryButton>
+            </Link>
             <Link
               href="#"
               className="block w-full text-left px-4 py-2 text-base font-medium text-[#2937b1] hover:underline"

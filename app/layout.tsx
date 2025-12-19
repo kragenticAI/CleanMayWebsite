@@ -48,7 +48,7 @@ export default function RootLayout({
     
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className="bg-[#fff] {inter.className }">
         
         {/* 2. Add the schema script to the <body> */}
         <script
