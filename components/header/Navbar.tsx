@@ -195,7 +195,7 @@ export default function Navbar() {
 
         <div className='hidden md:flex justify-center items-center gap-[15px]'>
           <Link href="/estimate">
-            <PrimaryButton type="button" className="text-white hover:underline">
+            <PrimaryButton  className="text-white hover:underline">
               Request a Free Estimate
             </PrimaryButton>
           </Link>
@@ -326,7 +326,7 @@ export default function Navbar() {
           </div>
           <div className="pt-4 pb-3 border-t border-gray-200">
               <Link href="/estimate">
-            <PrimaryButton type="button" className="text-white hover:underline">
+            <PrimaryButton  className="text-white hover:underline">
               Request a Free Estimate
             </PrimaryButton>
           </Link>

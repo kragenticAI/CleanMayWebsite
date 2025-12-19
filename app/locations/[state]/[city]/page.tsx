@@ -35,6 +35,7 @@ export default async function CityPage({ params }: CityProps) {
                         <div className="flex flex-col px-[10px] sm:flex-row gap-4 mt-8">
                             <Link href="/service/residential/deepcleaning">
                                 <PrimaryButton
+                              
                                     className='text-white hover:underline'
                                 // onClick={() =>
                                 //   document.getElementById('bookingForm')?.scrollIntoView({

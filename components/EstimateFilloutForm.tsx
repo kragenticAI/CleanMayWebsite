@@ -23,7 +23,10 @@ interface FormData {
 }
 interface EstimateFilloutFormProps {
   children: React.ReactNode;
+  propertySizeLabel?: string;
+  numRoomsLabel?: string;
 }
+
 
 // Errors object keys match FormData keys, values are error strings
 type FormErrors = Partial<Record<keyof FormData, string>>;

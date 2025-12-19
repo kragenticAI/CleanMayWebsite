@@ -70,6 +70,7 @@ export default async function StatePage({ params }: StatePageProps) {
             <div className="flex flex-col px-[10px] sm:flex-row gap-4 mt-8">
 
               <PrimaryButton
+             
                 className='text-white hover:underline'
 
               >

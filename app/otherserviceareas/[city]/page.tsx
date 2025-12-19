@@ -49,7 +49,7 @@ export default async function CityPage({ params }: PageProps) {
           </p>
 
           <div>
-            <PrimaryButton type="button" className="text-white hover:underline">
+            <PrimaryButton className="text-white hover:underline">
               Book now
             </PrimaryButton>
           </div>
